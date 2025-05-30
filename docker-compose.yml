@@ -18,5 +18,5 @@ volumes:
   postgres_data:
 
 networks:
-  javademo_network:
+  project_network:
     driver: bridge
