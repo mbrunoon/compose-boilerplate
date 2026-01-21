@@ -1,16 +1,17 @@
 services:
   web:
     build: .
-    container_name: project_web
+    container_name: projectname_web
     command: bash -lc "rm -f tmp/pids/server.pid && bin/rails db:prepare && bin/rails s -b 0.0.0.0"
     tty: true
     stdin_open: true
+    user: "${UID}:${GID}"    
     environment:
       RAILS_ENV: development
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_HOST: db
-      RAILS_MASTER_KEY: 
+      RAILS_MASTER_KEY: "${RAILS_MASTER_KEY}"
     volumes:
       - .:/rails
       - builds:/rails/app/assets/builds
@@ -19,11 +20,11 @@ services:
     depends_on:
       - db
     networks:
-      - project_network
+      - projectname_network
       
   db:
     image: postgres:17
-    container_name: project_db
+    container_name: projectname_db
     restart: always
     environment:
       POSTGRES_USER: postgres
@@ -33,7 +34,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/data
     networks:
-      - project_network
+      - projectname_network
 
 
 volumes:
@@ -41,5 +42,5 @@ volumes:
   builds:
 
 networks:
-  project_network:
+  projectname_network:
     driver: bridge
